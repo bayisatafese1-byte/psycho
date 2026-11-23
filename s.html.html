@@ -1,0 +1,702 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>General Psychology Chapter 1 - 40 Question Exam</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #f3f6fb;
+    color: #172033;
+    font-family: Arial, sans-serif;
+}
+
+.wrap {
+    max-width: 900px;
+    margin: 28px auto;
+    padding: 16px;
+}
+
+.panel, .qcard {
+    background: white;
+    border-radius: 14px;
+    padding: 22px;
+    margin-bottom: 16px;
+    box-shadow: 0 3px 14px #17203312;
+}
+
+h1 {
+    margin: 0 0 8px;
+    font-size: 25px;
+}
+
+.muted {
+    color: #64748b;
+}
+
+.stats {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 16px;
+}
+
+.track {
+    height: 9px;
+    background: #e5eaf2;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+.fill {
+    height: 100%;
+    width: 0;
+    background: #2563eb;
+    transition: width .2s;
+}
+
+.qcard h3 {
+    font-size: 17px;
+    line-height: 1.45;
+    margin: 0 0 14px;
+}
+
+.choice {
+    display: block;
+    padding: 12px 14px;
+    margin: 8px 0;
+    border: 1px solid #dbe2ec;
+    border-radius: 9px;
+    cursor: pointer;
+}
+
+.choice:hover {
+    background: #f5f8ff;
+    border-color: #8baef5;
+}
+
+.choice input {
+    margin-right: 9px;
+}
+
+.choice.correct {
+    background: #eaf8ef;
+    border-color: #22964b;
+}
+
+.choice.incorrect {
+    background: #fff0f0;
+    border-color: #d43d3d;
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 18px 0;
+}
+
+button {
+    border: 0;
+    border-radius: 9px;
+    padding: 12px 18px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.primary {
+    background: #2563eb;
+    color: white;
+}
+
+.secondary {
+    background: #e8edf5;
+    color: #1e293b;
+}
+
+button:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+}
+
+.feedback {
+    font-size: 14px;
+    margin-top: 10px;
+    color: #334155;
+    line-height: 1.5;
+}
+
+.hidden {
+    display: none;
+}
+
+.score {
+    font-size: 32px;
+    font-weight: 800;
+    color: #14532d;
+}
+
+@media(max-width:600px) {
+    .wrap {
+        margin: 10px auto;
+        padding: 10px;
+    }
+
+    .panel, .qcard {
+        padding: 16px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+
+    <section class="panel">
+        <h1>General Psychology — Chapter One</h1>
+
+        <div class="muted">
+            Essence of Psychology · 40 Multiple-Choice Questions
+        </div>
+
+        <div class="stats">
+            <strong id="answered">Answered: 0 / 40</strong>
+            <strong id="percent">0% completed</strong>
+        </div>
+
+        <div class="track">
+            <div class="fill" id="bar"></div>
+        </div>
+    </section>
+
+    <main id="quiz"></main>
+
+    <div class="actions">
+        <button class="primary" id="submit" onclick="submitExam()">
+            Submit Exam
+        </button>
+
+        <button class="secondary" onclick="resetExam()">
+            Reset / Try Again
+        </button>
+    </div>
+
+    <section class="panel hidden" id="result" aria-live="polite"></section>
+
+</div>
+
+<script>
+
+// ===============================
+// 40 EXAM QUESTIONS
+// ===============================
+
+const questions = [
+
+{
+q:"Psychology is scientifically defined as the study of:",
+o:["The soul only","Human behavior and underlying mental processes","The body only","Fortune telling"],
+a:1,
+e:"Psychology is the scientific study of human behavior and underlying mental processes."
+},
+
+{
+q:"The word psychology comes from which two Greek words?",
+o:["Psyche and logos","Bio and logy","Physis and graph","Psy and soma"],
+a:0,
+e:"Psyche means mind, soul or spirit; logos means study, knowledge or discourse."
+},
+
+{
+q:"The Greek word 'psyche' refers to:",
+o:["Study or knowledge","Mind, soul or spirit","Behavior only","Science"],
+a:1,
+e:"Psyche refers to mind, soul or spirit."
+},
+
+{
+q:"The Greek word 'logos' means:",
+o:["Mind","Feeling","Study, knowledge or discourse","Action"],
+a:2,
+e:"Logos means study, knowledge or discourse."
+},
+
+{
+q:"Which of the following is an example of overt behavior?",
+o:["Remembering","Thinking","Talking","Feeling"],
+a:2,
+e:"Overt behavior refers to outward or observable actions, such as talking."
+},
+
+{
+q:"Mental processes are:",
+o:["External actions only","Internal, covert activities of the mind","Only body movements","Actions that can always be seen"],
+a:1,
+e:"Thinking, feeling and remembering are examples of internal mental processes."
+},
+
+{
+q:"Psychology uses scientific methods and empirical data rather than:",
+o:["Systematic observation","Scientific procedures","Common sense alone","Research findings"],
+a:2,
+e:"Psychology uses scientific procedures and empirical data, not common sense alone."
+},
+
+{
+q:"How many major goals of psychology are described in Chapter 1?",
+o:["Two","Three","Four","Five"],
+a:2,
+e:"The four goals are description, explanation, prediction and control."
+},
+
+{
+q:"Which goal of psychology answers the question 'What is happening?'",
+o:["Description","Explanation","Prediction","Control"],
+a:0,
+e:"Description involves observing behavior and identifying what is happening."
+},
+
+{
+q:"Which goal tries to find reasons for observed behavior?",
+o:["Control","Explanation","Prediction","Description"],
+a:1,
+e:"Explanation asks why behavior is happening."
+},
+
+{
+q:"Which goal of psychology is concerned with what will happen in the future?",
+o:["Description","Control","Prediction","Explanation"],
+a:2,
+e:"Prediction determines what is likely to happen in the future."
+},
+
+{
+q:"Which goal involves modifying undesirable behavior into desirable behavior?",
+o:["Explanation","Description","Prediction","Control"],
+a:3,
+e:"Control means modifying or changing behavior."
+},
+
+{
+q:"Psychology began as an independent scientific field in:",
+o:["1779","1879","1900","1950"],
+a:1,
+e:"The chapter states that psychology began as a science in 1879."
+},
+
+{
+q:"Where was the first psychology laboratory established?",
+o:["London, England","Leipzig, Germany","Paris, France","Rome, Italy"],
+a:1,
+e:"Wilhelm Wundt established a psychology laboratory in Leipzig, Germany."
+},
+
+{
+q:"Who is known as the father of modern psychology in the chapter?",
+o:["Sigmund Freud","William James","Wilhelm Wundt","John B. Watson"],
+a:2,
+e:"Wilhelm Wundt is identified as the founder or father of modern psychology."
+},
+
+{
+q:"A school of thought is:",
+o:["A school building","A system of thinking about an issue","A research instrument","A mental illness"],
+a:1,
+e:"A school of thought is a system of thinking about an issue."
+},
+
+{
+q:"Structuralism views psychology as the study of:",
+o:["The structure of the mind","The function of the mind","Observable behavior only","Culture"],
+a:0,
+e:"Structuralism aims to identify the basic elements that make up the mind."
+},
+
+{
+q:"Who founded structuralism?",
+o:["William James","Edward Titchener","Max Wertheimer","Sigmund Freud"],
+a:1,
+e:"Edward Titchener is identified as the founder of structuralism."
+},
+
+{
+q:"Which method was best known to structuralists?",
+o:["Survey","Experiment","Introspection","Naturalistic observation"],
+a:2,
+e:"Structuralists used introspection, or looking inward into consciousness."
+},
+
+{
+q:"Functionalism studies the:",
+o:["Unconscious mind","Function of the mind","Structure of the mind","Whole mind only"],
+a:1,
+e:"Functionalism focuses on how the mind helps people function and adapt."
+},
+
+{
+q:"Who founded functionalism?",
+o:["William James","John B. Watson","Edward Titchener","Max Wertheimer"],
+a:0,
+e:"William James is identified as the founder of functionalism."
+},
+
+{
+q:"According to functionalism, psychological processes are generally:",
+o:["Unchangeable","Adaptive","Always unconscious","Unrelated to surroundings"],
+a:1,
+e:"Functionalists viewed psychological processes as adaptive."
+},
+
+{
+q:"Gestalt psychology emphasizes:",
+o:["Individual sensations only","The unconscious only","The whole mind and overall patterns","Observable actions only"],
+a:2,
+e:"Gestalt psychology views the mind as a whole pattern."
+},
+
+{
+q:"The phrase associated with Gestalt psychology is:",
+o:["Behavior is inherited","The whole is greater than the sum of its parts","The mind is a blank computer","Only the unconscious matters"],
+a:1,
+e:"Gestalt psychologists argued that the whole is greater than the sum of its parts."
+},
+
+{
+q:"Who founded behaviorism?",
+o:["Sigmund Freud","John B. Watson","William James","Wilhelm Wundt"],
+a:1,
+e:"John B. Watson is identified as the founder of behaviorism."
+},
+
+{
+q:"Behaviorism focuses on:",
+o:["Observable and measurable behavior","Dreams only","The structure of consciousness","Unconscious wishes only"],
+a:0,
+e:"Behaviorists focused on observable and measurable behavior."
+},
+
+{
+q:"According to Watson's behaviorism, behavior is mainly:",
+o:["Inherited and fixed","Learned rather than unlearned","Always unconscious","Independent of the environment"],
+a:1,
+e:"The chapter says Watson believed behavior is learned rather than inherited."
+},
+
+{
+q:"Who founded psychoanalysis?",
+o:["John B. Watson","Max Wertheimer","Sigmund Freud","Edward Titchener"],
+a:2,
+e:"Sigmund Freud is identified as the founder of psychoanalysis."
+},
+
+{
+q:"Psychoanalysis focuses on the:",
+o:["Unconscious part of the mind","Visible body only","Social institutions only","Structure of the brain only"],
+a:0,
+e:"Psychoanalysis studies components and processes of the unconscious mind."
+},
+
+{
+q:"Freud suggested that early childhood conflicts and emotional traumas can:",
+o:["Have no later effect","Remain unconscious and affect later behavior","Always be remembered clearly","Only affect physical growth"],
+a:1,
+e:"Freud argued that hidden childhood conflicts may continue to affect later behavior."
+},
+
+{
+q:"Which of the following is a modern psychological perspective?",
+o:["Structuralism","Functionalism","Cognitive perspective","Introspection"],
+a:2,
+e:"Cognitive is one of the modern perspectives listed in the chapter."
+},
+
+{
+q:"The psychodynamic perspective emphasizes:",
+o:["Unconscious dynamics and inner conflicts","Only rewards and punishments","Only cultural rules","Only observable movements"],
+a:0,
+e:"The psychodynamic perspective focuses on unconscious forces and inner conflicts."
+},
+
+{
+q:"The behavioral perspective emphasizes the role of:",
+o:["Learning experiences and environment","Dream symbols only","Free will only","Genetic heritage only"],
+a:0,
+e:"The behavioral perspective examines how environment and learning shape behavior."
+},
+
+{
+q:"The humanistic perspective gives importance to:",
+o:["Free will and human potential","Unconscious conflicts only","Rewards only","Brain chemicals only"],
+a:0,
+e:"Humanistic psychology emphasizes human potential and self-actualization."
+},
+
+{
+q:"The cognitive perspective studies:",
+o:["How people think, remember and solve problems","Only outward movements","Only cultural traditions","Only childhood conflicts"],
+a:0,
+e:"The cognitive perspective focuses on mental processes such as memory and reasoning."
+},
+
+{
+q:"The biological perspective examines how behavior is affected by:",
+o:["Bodily events and brain functioning","Only classroom rules","Only personal values","Only social groups"],
+a:0,
+e:"The biological perspective studies how the body and brain affect behavior."
+},
+
+{
+q:"The sociocultural perspective focuses on:",
+o:["Social and cultural factors affecting behavior","The structure of the mind only","Individual brain chemicals only","Introspection only"],
+a:0,
+e:"This perspective examines how social and cultural contexts influence behavior."
+},
+
+{
+q:"Which branch studies physical, cognitive and psychological changes across the life span?",
+o:["Forensic psychology","Developmental psychology","Industrial psychology","Social psychology"],
+a:1,
+e:"Developmental psychology studies changes across the life span."
+},
+
+{
+q:"Which branch applies psychology to improve the legal system?",
+o:["Health psychology","Educational psychology","Forensic psychology","Personality psychology"],
+a:2,
+e:"Forensic psychology applies psychological principles to the legal system."
+}
+
+];
+
+
+// ===============================
+// DISPLAY QUESTIONS
+// ===============================
+
+const quiz = document.getElementById("quiz");
+
+const answeredEl = document.getElementById("answered");
+const percentEl = document.getElementById("percent");
+const bar = document.getElementById("bar");
+const result = document.getElementById("result");
+
+let submitted = false;
+
+
+function render() {
+
+    quiz.innerHTML = "";
+
+    questions.forEach((item, i) => {
+
+        const card = document.createElement("section");
+        card.className = "qcard";
+        card.id = "q" + i;
+
+        const h = document.createElement("h3");
+
+        h.textContent = (i + 1) + ". " + item.q;
+
+        card.appendChild(h);
+
+        item.o.forEach((option, j) => {
+
+            const label = document.createElement("label");
+            label.className = "choice";
+
+            const radio = document.createElement("input");
+
+            radio.type = "radio";
+            radio.name = "question" + i;
+            radio.value = j;
+
+            radio.addEventListener("change", updateProgress);
+
+            label.appendChild(radio);
+
+            label.appendChild(
+                document.createTextNode(
+                    String.fromCharCode(65 + j) + ". " + option
+                )
+            );
+
+            card.appendChild(label);
+
+        });
+
+        const feedback = document.createElement("div");
+
+        feedback.className = "feedback";
+        feedback.id = "feedback" + i;
+
+        card.appendChild(feedback);
+
+        quiz.appendChild(card);
+
+    });
+
+    updateProgress();
+
+}
+
+
+// ===============================
+// UPDATE PROGRESS
+// ===============================
+
+function updateProgress() {
+
+    let count = 0;
+
+    questions.forEach((_, i) => {
+
+        if (
+            document.querySelector(
+                'input[name="question' + i + '"]:checked'
+            )
+        ) {
+            count++;
+        }
+
+    });
+
+    answeredEl.textContent =
+        "Answered: " + count + " / " + questions.length;
+
+    const p = Math.round(count / questions.length * 100);
+
+    percentEl.textContent = p + "% completed";
+
+    bar.style.width = p + "%";
+
+}
+
+
+// ===============================
+// SUBMIT EXAM AND CALCULATE SCORE
+// ===============================
+
+function submitExam() {
+
+    if (submitted) return;
+
+    let score = 0;
+    let unanswered = 0;
+
+    questions.forEach((item, i) => {
+
+        const selected = document.querySelector(
+            'input[name="question' + i + '"]:checked'
+        );
+
+        const card = document.getElementById("q" + i);
+
+        const labels = card.querySelectorAll(".choice");
+
+        labels.forEach((label, j) => {
+
+            const radio = label.querySelector("input");
+
+            radio.disabled = true;
+
+            if (j === item.a) {
+                label.classList.add("correct");
+            }
+
+            if (
+                selected &&
+                Number(selected.value) === j &&
+                j !== item.a
+            ) {
+                label.classList.add("incorrect");
+            }
+
+        });
+
+        if (!selected) {
+
+            unanswered++;
+
+        } else if (Number(selected.value) === item.a) {
+
+            score++;
+
+        }
+
+        document.getElementById("feedback" + i).textContent =
+            "Explanation: " + item.e;
+
+    });
+
+    submitted = true;
+
+    document.getElementById("submit").disabled = true;
+
+    result.classList.remove("hidden");
+
+    result.innerHTML =
+
+        '<div class="score">Your score: ' +
+        score + ' / ' + questions.length + '</div>' +
+
+        '<p>Correct: ' + score +
+        ' · Incorrect: ' +
+        (questions.length - score - unanswered) +
+        ' · Unanswered: ' + unanswered + '</p>' +
+
+        '<p>' +
+        (score >= 32
+            ? 'Excellent work!'
+            : score >= 24
+                ? 'Good effort. Review the explanations for missed questions.'
+                : 'Keep studying Chapter 1 and try again.') +
+        '</p>';
+
+    result.scrollIntoView({ behavior: "smooth" });
+
+}
+
+
+// ===============================
+// RESET / TRY AGAIN
+// ===============================
+
+function resetExam() {
+
+    submitted = false;
+
+    result.classList.add("hidden");
+
+    result.innerHTML = "";
+
+    document.getElementById("submit").disabled = false;
+
+    render();
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+}
+
+
+// START THE EXAM
+
+render();
+
+</script>
+
+</body>
+</html>
